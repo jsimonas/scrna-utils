@@ -8,9 +8,10 @@ import pandas as pd
 
 def prepare_tags(bam, outbam, bcs, threads):
     
+    pysam.index(bam)
+    
     chrs = [i.split('\t')[0] for i in pysam.idxstats(bam).split('\n')[:-1]]
     bcs = pd.read_csv(bcs, header = None)
-    pysam.index(bam)
     
     for chr in chrs:
         if chr == '*':
