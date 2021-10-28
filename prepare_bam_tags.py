@@ -60,7 +60,6 @@ def main():
     
     args = parser.parse_args()
 
-
     prepare_tags(bam = args.bam, outbam = args.out, bcs = args.bcs, threads = args.n)
 
 if __name__ == "__main__":
