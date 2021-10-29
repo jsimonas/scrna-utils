@@ -15,10 +15,10 @@ def prepare_tags(bam, outbam, bcs, threads):
     
     for chr in chrs:
         if chr == '*':
-            chrlabel = 'unmapped'
+            chrname = 'unmapped'
         else:
-            chrlabel = chr
-        tmp = bam+".tmp."+chrlabel+".bam"
+            chrname = chr
+        tmp = bam+".tmp."+chrname+".bam"
         inp = pysam.AlignmentFile(bam, 'rb', threads = threads)
         out = pysam.AlignmentFile(tmp, 'wb', template = inp, threads = threads)
         
@@ -29,13 +29,10 @@ def prepare_tags(bam, outbam, bcs, threads):
             else:
                 tc = 'False'
             read.set_tag(tag = 'TC', value = tc, value_type = 'Z')
-            if cell == '-':
-                cell = 'NA'
-            read.set_tag(tag = 'CB', value = cell, value_type = 'Z')
             if read.has_tag('GN'):
                 gene = read.get_tag('GN')
             else:
-                gene = 'NA'
+                gene = '-'
             read.set_tag(tag = 'GN', value = gene, value_type = 'Z')
             out.write(read)
     inp.close()
