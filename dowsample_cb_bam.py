@@ -12,7 +12,7 @@ def downsample_bam(bam, rd_out, ub_out, gn_out, sm_out, threads):
     
     pysam.index(bam)
     
-    inp = pysam.AlignmentFile(bam, 'rb')
+    inp = pysam.AlignmentFile(bam, 'rb', threads = threads)
     sample_rates = [0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
     
     ub_sets = {p: {} for p in sample_rates}
@@ -23,7 +23,7 @@ def downsample_bam(bam, rd_out, ub_out, gn_out, sm_out, threads):
     np.random.seed(0)
     
     # parse bam
-    for read in inp.fetch(threads = threads):
+    for read in inp.fetch():
         rand_value = np.random.rand()
         # get tags
         cb = read.get_tag('CB')
