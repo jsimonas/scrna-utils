@@ -23,7 +23,7 @@ def downsample_bam(bam, rd_out, ub_out, gn_out, sm_out, threads):
     np.random.seed(0)
     
     # parse bam
-    for read in inp.fetch():
+    for read in inp.fetch(threads = threads):
         rand_value = np.random.rand()
         # get tags
         cb = read.get_tag('CB')
@@ -42,7 +42,7 @@ def downsample_bam(bam, rd_out, ub_out, gn_out, sm_out, threads):
                     rd_sets[p][cb] += 1
                 else:
                     ub_sets[p][cb].add((ub, gn))
-                    gn_sets[p][cb].add((gn))
+                    gn_sets[p][cb].add(gn)
                     rd_sets[p][cb] += 1
     
     # flatten results
