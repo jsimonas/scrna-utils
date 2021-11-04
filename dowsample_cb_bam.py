@@ -37,8 +37,6 @@ def downsample_bam(bam, rd_out, ub_out, gn_out, sm_out, threads):
                     gn_sets[p][cb] = set([])
                     rd_sets[p][cb] = 0
                 elif '-' in {ub, gn}:
-                    ub_sets[p][cb] = set([])
-                    gn_sets[p][cb] = set([])
                     rd_sets[p][cb] += 1
                 else:
                     ub_sets[p][cb].add((ub, gn))
