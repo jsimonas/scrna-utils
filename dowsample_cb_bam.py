@@ -25,7 +25,7 @@ def downsample_bam(bam, rd_out, ub_out, gn_out, threads):
     # parse bam
     for read in inp.fetch():
         # use primary reads
-        if not read.is_supplementary and not read.is_secondary:
+        if not read.is_supplementary or not read.is_secondary:
             rand_value = np.random.rand()
             # get tags
             cb = read.get_tag('CB')
