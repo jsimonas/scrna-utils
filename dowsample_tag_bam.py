@@ -23,22 +23,24 @@ def downsample_tag(bam, tag, rd_out, ub_out, threads):
     
     # parse bam
     for read in inp.fetch():
-        rand_value = np.random.rand()
-        # get tags
-        tg = read.get_tag(tag)
-        ub = read.get_tag('UB')
-        gn = read.get_tag('GN')
-        # condense umis and genes
-        for p in sample_rates:
-            if p > rand_value:
-                if tg not in ub_sets[p]:
-                    ub_sets[p][tg] = set([])
-                    rd_sets[p][tg] = 0
-                elif '-' in {ub, gn}:
-                    rd_sets[p][tg] += 1
-                else:
-                    ub_sets[p][tg].add((ub, gn))
-                    rd_sets[p][tg] += 1
+        # use primary reads
+        if not read.is_supplementary and not read.is_secondary:
+            rand_value = np.random.rand()
+            # get tags
+            tg = read.get_tag(tag)
+            ub = read.get_tag('UB')
+            gn = read.get_tag('GN')
+            # condense umis and genes
+            for p in sample_rates:
+                if p > rand_value:
+                    if tg not in ub_sets[p]:
+                        ub_sets[p][tg] = set([])
+                        rd_sets[p][tg] = 0
+                    elif '-' in {ub, gn}:
+                        rd_sets[p][tg] += 1
+                    else:
+                        ub_sets[p][tg].add((ub, gn))
+                        rd_sets[p][tg] += 1
     
     # flatten results
     rd_df = pd.DataFrame.from_dict(rd_sets).fillna(0)
