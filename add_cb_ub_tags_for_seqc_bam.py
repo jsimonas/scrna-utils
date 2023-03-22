@@ -17,7 +17,7 @@ def add_tags(bam, outbam, threads):
     out = pysam.AlignmentFile(outbam, 'wb', template = inp, threads = threads)
         
     for read in inp.fetch():
-        qname = read.alignment.query_name            
+        qname = read.query_name            
         cb = qname.split(':')[1]
         ub = qname.split(':')[2]
         read.set_tag(tag = 'CB', value = cb, value_type = 'Z')
