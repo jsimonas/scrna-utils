@@ -8,35 +8,18 @@ import pandas as pd
 
 def add_tags(bam, outbam, threads):
     
-    pysam.index(bam)
+    inp = pysam.AlignmentFile(bam, 'rb', threads = threads)
+    out = pysam.AlignmentFile(outbam, 'wb', template = inp, threads = threads)
     
-    chrs = [i.split('\t')[0] for i in pysam.idxstats(bam).split('\n')[:-1]]
-    
-    for chr in chrs:
-        if chr == '*':
-            chrname = 'unmapped'
-        else:
-            chrname = chr
-        tmp = bam+".tmp."+chrname+".bam"
-        inp = pysam.AlignmentFile(bam, 'rb', threads = threads)
-        out = pysam.AlignmentFile(tmp, 'wb', template = inp, threads = threads)
-        
-        for read in inp.fetch(chr):
-            qname = read.alignment.query_name            
-            cb = qname.split(':')[1]
-            ub = qname.split(':')[2]
-            read.set_tag(tag = 'CB', value = cb, value_type = 'Z')
-            read.set_tag(tag = 'UB', value = ub, value_type = 'Z')
-            out.write(read)
+    for read in inp.fetch():
+        qname = read.alignment.query_name            
+        cb = qname.split(':')[1]
+        ub = qname.split(':')[2]
+        read.set_tag(tag = 'CB', value = cb, value_type = 'Z')
+        read.set_tag(tag = 'UB', value = ub, value_type = 'Z')
+        out.write(read)
     inp.close()
     out.close()
-        
-    bams = [bam+".tmp."+c+".bam" for c in chrs[:-1]]
-    bams.append(bam+".tmp."+"unmapped"+".bam")
-    cat_args = ['-o', outbam]+bams
-    pysam.cat(*cat_args)
-    x = [os.remove(b) for b in bams]
-
 
 def main():
     parser = argparse.ArgumentParser(add_help=True)
