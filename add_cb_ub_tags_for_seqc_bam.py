@@ -25,9 +25,9 @@ def add_tags(bam, outbam, threads):
         out.write(read)
     inp.close()
     out.close()
-        
+    
     os.remove(sbam)
-
+    os.remove(sbam+'.bai')
 
 def main():
     parser = argparse.ArgumentParser(add_help=True)
