@@ -8,6 +8,8 @@ import pandas as pd
 
 def add_tags(bam, outbam, threads):
     
+    pysam.index(bam)
+    
     inp = pysam.AlignmentFile(bam, 'rb', threads = threads)
     out = pysam.AlignmentFile(outbam, 'wb', template = inp, threads = threads)
     
