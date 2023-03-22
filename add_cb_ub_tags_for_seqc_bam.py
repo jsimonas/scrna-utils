@@ -8,11 +8,14 @@ import pandas as pd
 
 def add_tags(bam, outbam, threads):
     
-    pysam.index(bam)
+    sbam = bam+'sorted'
+    pysam.sort("-o", sbam, bam)
     
-    inp = pysam.AlignmentFile(bam, 'rb', threads = threads)
+    pysam.index(sbam)
+    
+    inp = pysam.AlignmentFile(sbam, 'rb', threads = threads)
     out = pysam.AlignmentFile(outbam, 'wb', template = inp, threads = threads)
-    
+        
     for read in inp.fetch():
         qname = read.alignment.query_name            
         cb = qname.split(':')[1]
@@ -22,6 +25,9 @@ def add_tags(bam, outbam, threads):
         out.write(read)
     inp.close()
     out.close()
+        
+    os.remove(sbam)
+
 
 def main():
     parser = argparse.ArgumentParser(add_help=True)
