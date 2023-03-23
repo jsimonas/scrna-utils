@@ -49,14 +49,14 @@ def main():
                         help='path to input BAM file')
     parser.add_argument('--out', type=str, metavar='FILENAME',
                         help='path to output bam file')
-    parser.add_argument('--platform', type=str, default='indrops',
+    parser.add_argument('--platform', type=str, default = 'indrops',
                         help='indrops or 10x')
     parser.add_argument('--n', type=int, default = 4,
                         help='number of threads to use')
     
     args = parser.parse_args()
 
-    add_tags(bam = args.bam, outbam = args.out, threads = args.n)
+    add_tags(bam = args.bam, outbam = args.out, platform = args.platform, threads = args.n)
 
 if __name__ == "__main__":
     main()
