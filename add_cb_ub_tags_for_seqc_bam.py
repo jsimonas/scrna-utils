@@ -34,8 +34,9 @@ def add_tags(bam, outbam, platform, threads):
         elif platform == '10x':
             read.set_tag(tag = 'CB', value = cx, value_type = 'Z')
         else:
-            sys.exit('provided platform parameter is not supported, use indrops or 10x.')
+            sys.exit('provided platform is not supported, use indrops or 10x.')
         read.set_tag(tag = 'UB', value = ub, value_type = 'Z')
+        read.query_name = qname.split(';')[1]
         out.write(read)
     inp.close()
     out.close()
