@@ -22,13 +22,13 @@ def add_tags(bam, outbam, platform, threads):
         cx = qname.split(':')[1]
         ub = qname.split(':')[2]
         if len(cx) == 16:
-            cb = cx[:8]+'GAGTGATTGCTTGTGACGCCTT'+cx[8:]
+            cb = cx[:8]+'GAGTGATTGCTTGTGACGCCTT'+cx[8:]+ub
         elif len(cx) == 17:
-            cb = cx[:9]+'GAGTGATTGCTTGTGACGCCTT'+cx[9:]
+            cb = cx[:9]+'GAGTGATTGCTTGTGACGCCTT'+cx[9:]+ub
         elif len(cx) == 18:
-            cb = cx[:10]+'GAGTGATTGCTTGTGACGCCTT'+cx[10:]
+            cb = cx[:10]+'GAGTGATTGCTTGTGACGCCTT'+cx[10:]+ub
         else:
-            cb = cx[:11]+'GAGTGATTGCTTGTGACGCCTT'+cx[11:]
+            cb = cx[:11]+'GAGTGATTGCTTGTGACGCCTT'+cx[11:]+ub
         if platform == 'indrops':
             read.set_tag(tag = 'CB', value = cb, value_type = 'Z')
         elif platform == '10x':
