@@ -52,7 +52,7 @@ def downsample_by_cov(bam, out, target_num_reads, seed, threads):
             gn = read.get_tag('GN')
             # downsample based on coverage
             if rand_value < (target_num_reads / cb_cov[cb]):
-                if cb not in ub_sets:
+                if cb not in ub_set:
                     ub_set[cb] = set([])
                     rd_set[cb] = 0
                 elif rd_set[cb] >= target_num_reads:
