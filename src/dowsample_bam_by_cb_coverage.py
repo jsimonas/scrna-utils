@@ -32,7 +32,7 @@ def downsample_by_cov(bam, out, target_num_reads, seed, threads):
     inp = pysam.AlignmentFile(bam, 'rb', threads = threads)
     
     # calculate coverage of each cb
-    cb_cov = get_cb_converage(inp)
+    cb_cov = get_cb_coverage(inp)
 
     # make dicts
     ub_set = {}
