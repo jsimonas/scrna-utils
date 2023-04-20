@@ -64,49 +64,49 @@ def downsample_by_cov(bam, out, target_num_reads, seed, threads):
                     ub_set[cb].add((ub, gn))
                     rd_set[cb] += 1
         
-        # flatted data
-        genes = set(g for genes in ub_set.values() for u, g in genes)
-        ub_df = pd.DataFrame(
-            data = 0,
-            index = np.array(list(ub_set.keys())),
-            columns = genes
-        )
-        
-        rd_df = pd.DataFrame.from_dict(
-            data = rd_set,
-            orient = 'index',
-            columns = ['reads']
-        )
+    # flatted data
+    genes = set(g for genes in ub_set.values() for u, g in genes)
+    ub_df = pd.DataFrame(
+    data = 0,
+    index = np.array(list(ub_set.keys())),
+    columns = genes
+    )
+    
+    rd_df = pd.DataFrame.from_dict(
+        data = rd_set,
+        orient = 'index',
+        columns = ['reads']
+    )
 
-        # count umis per gene
-        for barcode, genes in ub_set.items():
-            if genes:
-                for umi, gene in genes:
-                    ub_df.loc[barcode, gene] += 1
+    # count umis per gene
+    for barcode, genes in ub_set.items():
+        if genes:
+            for umi, gene in genes:
+                ub_df.loc[barcode, gene] += 1
 
-        # create sparse matrix
-        ub_mat = csr_matrix(ub_df.values)
+    # create sparse matrix
+    ub_mat = csr_matrix(ub_df.values)
 
-        # write outputs
-        mmwrite(
+    # write outputs
+    mmwrite(
         target = out + '/ub_mat.mtx',
         a = ub_mat
-        )
-        ub_df.to_csv(
-            path_or_buf = out + '/ub_barcodes.tsv',
-            columns = [],
-            header = False
-        )
-        ub_df.transpose().to_csv(
-            path_or_buf = out + '/ub_features.tsv',
-            columns = [],
-            header = False
-        )
-        rd_df.to_csv(
-            path_or_buf = out + '/reads_per_cb.tsv',
-            index_label = 'barcode',
-            sep = '\t'
-        )
+    )
+    ub_df.to_csv(
+        path_or_buf = out + '/ub_barcodes.tsv',
+        columns = [],
+        header = False
+    )
+    ub_df.transpose().to_csv(
+        path_or_buf = out + '/ub_features.tsv',
+        columns = [],
+        header = False
+    )
+    rd_df.to_csv(
+        path_or_buf = out + '/reads_per_cb.tsv',
+        index_label = 'barcode',
+        sep = '\t'
+    )
 
 def main():
     parser = argparse.ArgumentParser(add_help=True)
