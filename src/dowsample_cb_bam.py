@@ -44,7 +44,8 @@ def downsample_bam(bam, rd_out, ub_out, gn_out, threads):
                         ub_sets[p][cb].add((ub, gn))
                         gn_sets[p][cb].add(gn)
                         rd_sets[p][cb] += 1
-    
+    inp.close()
+
     # flatten results
     rd_df = pd.DataFrame.from_dict(rd_sets).fillna(0)
     ub_df = pd.DataFrame.from_dict(ub_sets)

@@ -63,7 +63,8 @@ def downsample_by_cov(bam, out, target_num_reads, seed, threads):
                 else:
                     ub_set[cb].add((ub, gn))
                     rd_set[cb] += 1
-        
+    inp.close()
+    
     # flatted data
     genes = set(g for genes in ub_set.values() for u, g in genes)
     ub_df = pd.DataFrame(
