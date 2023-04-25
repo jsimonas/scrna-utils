@@ -17,6 +17,7 @@ def trim_reads(bam, outbam, trim_length, threads):
     for read in inp.fetch():
         qual = read.qual[:trim_length]
         read.query_sequence = read.query_sequence[:trim_length]
+        read.cigarstring = str(trim_length) + "M"
         read.qual = qual
         out.write(read)
     inp.close()
