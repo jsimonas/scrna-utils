@@ -5,11 +5,10 @@ import argparse
 import pandas as pd
 import numpy as np
 
-
 def count_mapped_features(bam, out, threads):
     """
     Count occurrences of sF tag events translated into meaningful categories per cell barcode (CB),
-    while taking into account unique molecular identifier (UB) and gene name (GN).
+    and add a total_reads column for each CB.
 
     Args:
         bam (str): Input BAM file path.
@@ -26,8 +25,8 @@ def count_mapped_features(bam, out, threads):
     inp = pysam.AlignmentFile(bam, 'rb', threads=threads)
 
     # init dicts
-    ub_set = {}
     sf_counts = {}
+    total_reads = {}
 
     # sF tag categories
     translate_tags = {
@@ -49,31 +48,28 @@ def count_mapped_features(bam, out, threads):
         if not read.is_supplementary and not read.is_secondary:
             # get tags
             cb = read.get_tag('CB')
-            ub = read.get_tag('UB')
-            gn = read.get_tag('GN')
             sf = ','.join(map(str, read.get_tag('sF'))) if read.has_tag('sF') else 'NaN'
             
             # translate the sF tag
             sf_category = translate_tags.get(sf, 'unknown')
 
             # init CB entry if not present
-            if cb not in ub_set:
-                ub_set[cb] = set()
+            if cb not in sf_counts:
                 sf_counts[cb] = {key: 0 for key in translate_tags.values()}
+                total_reads[cb] = 0
 
-            # add UB and GN combination to the set
-            if (ub, gn) not in ub_set[cb]:
-                ub_set[cb].add((ub, gn))
+            # increment the count for the corresponding sF category
+            sf_counts[cb][sf_category] += 1
 
-                # increment the count for the corresponding sF category
-                sf_counts[cb][sf_category] += 1
+            # increment total_reads for the CB
+            total_reads[cb] += 1
 
     inp.close()
 
     # convert dict to dataframe
     data = []
     for cb, counts in sf_counts.items():
-        row = {'barcode': cb, **counts}
+        row = {'barcode': cb, 'total_reads': total_reads[cb], **counts}
         data.append(row)
 
     df = pd.DataFrame(data)
@@ -84,7 +80,6 @@ def count_mapped_features(bam, out, threads):
         index= False,
         sep = '\t'
     )
-
 
 def main():
     parser = argparse.ArgumentParser(add_help=True)
