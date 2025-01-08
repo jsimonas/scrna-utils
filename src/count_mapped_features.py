@@ -6,7 +6,7 @@ import pandas as pd
 import numpy as np
 
 
-def count_mapped_features(bam, threads):
+def count_mapped_features(bam, out, threads):
     """
     Count occurrences of sF tag events translated into meaningful categories per cell barcode (CB),
     while taking into account unique molecular identifier (UB) and gene name (GN).
