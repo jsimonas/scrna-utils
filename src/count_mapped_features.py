@@ -30,14 +30,14 @@ def count_mapped_features(bam, out, threads):
 
     # sF tag categories
     translate_tags = {
-        '1,1': 'fully_exonic_sense',
-        '2,0': 'fully_exonic_antisense',
-        '3,1': 'mainly_exonic_sense',
-        '4,0': 'mainly_exonic_antisense',
-        '5,1': 'mainly_intronic_sense',
-        '6,0': 'mainly_intronic_antisense',
-        '7,0': 'mainly_intergenic_nonsense',
-        '-1,-1': 'fully_intergenic_nonsense',
+        '1,1': 'fully_exonic_se',
+        '2,0': 'fully_exonic_as',
+        '3,1': 'mainly_exonic_se',
+        '4,0': 'mainly_exonic_as',
+        '5,1': 'mainly_intronic_se',
+        '6,0': 'mainly_intronic_as',
+        '7,0': 'unique_intergenic_ns',
+        '-1,-1': 'multi_intergenic_ns',
         'NaN': 'unmapped',
         'unknown': 'unknown'
     }
