@@ -31,13 +31,14 @@ def count_mapped_features(bam, out, threads):
 
     # sF tag categories
     translate_tags = {
-        'B:i,1,1': 'fully_exonic_sense',
-        'B:i,2,0': 'fully_exonic_antisense',
-        'B:i,3,1': 'mainly_exonic_sense',
-        'B:i,4,0': 'mainly_exonic_antisense',
-        'B:i,5,1': 'mainly_intronic_sense',
-        'B:i,6,0': 'mainly_intronic_antisense',
-        'B:i,7,0': 'mainly_intergenic_nonsense',
+        '1,1': 'fully_exonic_sense',
+        '2,0': 'fully_exonic_antisense',
+        '3,1': 'mainly_exonic_sense',
+        '4,0': 'mainly_exonic_antisense',
+        '5,1': 'mainly_intronic_sense',
+        '6,0': 'mainly_intronic_antisense',
+        '7,0': 'mainly_intergenic_nonsense',
+        '-1,-1': 'fully_intergenic_nonsense'
         'NaN': 'unmapped',
         'unknown': 'unknown'
     }
@@ -50,10 +51,7 @@ def count_mapped_features(bam, out, threads):
             cb = read.get_tag('CB')
             ub = read.get_tag('UB')
             gn = read.get_tag('GN')
-            #sf = ','.join(map(str, read.get_tag('sF'))) if read.has_tag('sF') else 'NaN'
-            sf = read.get_tag('sF')
-            
-            print(sf)
+            sf = ','.join(map(str, read.get_tag('sF'))) if read.has_tag('sF') else 'NaN'
             
             # translate the sF tag
             sf_category = translate_tags.get(sf, 'unknown')
