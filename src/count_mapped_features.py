@@ -28,16 +28,16 @@ def count_mapped_features(bam, out, threads):
     sf_counts = {}
     total_reads = {}
 
-    # sF tag categories
+    # sF tag categories based on the first digit
     translate_tags = {
-        '1,1': 'fully_exonic_se',
-        '2,0': 'fully_exonic_as',
-        '3,1': 'mainly_exonic_se',
-        '4,0': 'mainly_exonic_as',
-        '5,1': 'mainly_intronic_se',
-        '6,0': 'mainly_intronic_as',
-        '7,0': 'unique_intergenic_ns',
-        '-1,-1': 'multi_intergenic_ns',
+        '1': 'fully_exonic_se',
+        '2': 'fully_exonic_as',
+        '3': 'mainly_exonic_se',
+        '4': 'mainly_exonic_as',
+        '5': 'mainly_intronic_se',
+        '6': 'mainly_intronic_as',
+        '7': 'unique_intergenic_ns',
+        '-1': 'multi_intergenic_ns',
         'NaN': 'unmapped',
         'unknown': 'unknown'
     }
@@ -49,13 +49,14 @@ def count_mapped_features(bam, out, threads):
             # get tags
             cb = read.get_tag('CB')
             sf = ','.join(map(str, read.get_tag('sF'))) if read.has_tag('sF') else 'NaN'
-            
-            # translate the sF tag
-            sf_category = translate_tags.get(sf, 'unknown')
+
+            # translate the sF tag using the first part
+            sf_key = sf.split(',')[0] if sf != 'NaN' else 'NaN'
+            sf_category = translate_tags.get(sf_key, 'unknown')
 
             # init CB entry if not present
             if cb not in sf_counts:
-                sf_counts[cb] = {key: 0 for key in translate_tags.values()}
+                sf_counts[cb] = {category: 0 for category in translate_tags.values()}
                 total_reads[cb] = 0
 
             # increment the count for the corresponding sF category
