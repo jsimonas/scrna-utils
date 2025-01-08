@@ -49,7 +49,7 @@ def count_mapped_features(bam, out, threads):
             cb = read.get_tag('CB')
             ub = read.get_tag('UB')
             gn = read.get_tag('GN')
-            sf = read.get_tag('sF') if read.has_tag('sF') else 'NaN'
+            sf = ','.join(map(str, read.get_tag('sF'))) if read.has_tag('sF') else 'NaN'
 
             # translate the sF tag
             sf_category = translate_tags.get(sf, 'unknown')
