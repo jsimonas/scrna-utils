@@ -103,7 +103,7 @@ def main():
     
     args = parser.parse_args()
 
-    downsample_by_cov(
+    count_mapped_features(
         bam = args.bam,
         out = args.out,
         threads = args.n
