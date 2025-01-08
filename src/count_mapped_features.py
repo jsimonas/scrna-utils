@@ -38,7 +38,7 @@ def count_mapped_features(bam, out, threads):
         '5,1': 'mainly_intronic_sense',
         '6,0': 'mainly_intronic_antisense',
         '7,0': 'mainly_intergenic_nonsense',
-        '-1,-1': 'fully_intergenic_nonsense'
+        '-1,-1': 'fully_intergenic_nonsense',
         'NaN': 'unmapped',
         'unknown': 'unknown'
     }
