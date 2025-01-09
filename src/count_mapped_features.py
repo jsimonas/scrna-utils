@@ -43,7 +43,7 @@ def count_mapped_features(bam, out, threads):
     }
 
     # parse BAM
-    for read in inp.fetch():
+    for read in inp.fetch(until_eof=True):
         # use only primary reads
         if not read.is_supplementary and not read.is_secondary:
             # get tag
