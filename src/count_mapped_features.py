@@ -46,19 +46,27 @@ def count_mapped_features(bam, out, threads):
     for read in inp.fetch():
         # use only primary reads
         if not read.is_supplementary and not read.is_secondary:
-            # get tags
+            # get tag
             cb = read.get_tag('CB')
-            sf = ','.join(map(str, read.get_tag('sF'))) if read.has_tag('sF') else 'NaN'
-
-            # translate the sF tag using the first part
-            sf_key = sf.split(',')[0] if sf != 'NaN' else 'NaN'
-            sf_category = translate_tags.get(sf_key, 'unknown')
 
             # init CB entry if not present
             if cb not in sf_counts:
                 sf_counts[cb] = {category: 0 for category in translate_tags.values()}
+                sf_counts[cb]['unknown'] = 0
+                sf_counts[cb]['unmapped_reads'] = 0
                 total_reads[cb] = 0
 
+            # check if the read is unmapped
+            if read.is_unmapped:
+                sf_counts[cb]['unmapped_reads'] += 1
+                total_reads[cb] += 1
+                continue
+            
+            # process mapped reads
+            sf = ','.join(map(str, read.get_tag('sF'))) if read.has_tag('sF') else 'NaN'
+            sf_key = sf.split(',')[0] if sf != 'NaN' else 'NaN'
+            sf_category = translate_tags.get(sf_key, 'unknown')
+    
             # increment the count for the corresponding sF category
             sf_counts[cb][sf_category] += 1
 
