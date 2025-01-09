@@ -38,7 +38,6 @@ def count_mapped_features(bam, out, threads):
         '6': 'mainly_intronic_as',
         '7': 'unique_intergenic_ns',
         '-1': 'multi_intergenic_ns',
-        'NaN': 'unmapped',
         'unknown': 'unknown'
     }
 
