@@ -70,7 +70,7 @@ def downsample_by_cov(bam, out, target_num_reads, seed, threads):
     ub_df = pd.DataFrame(
     data = 0,
     index = np.array(list(ub_set.keys())),
-    columns = genes
+    columns = list(genes)
     )
     
     rd_df = pd.DataFrame.from_dict(
