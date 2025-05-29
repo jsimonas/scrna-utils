@@ -23,7 +23,7 @@ def get_cb_coverage(bam):
                 cb_dict[cb] += 1
     return cb_dict
 
-def downsample_by_cov(bam, out, target_num_reads, seed, threads):
+def downsample_by_cov(bam, out, target_num_reads, min_reads, seed, threads):
     
     # index bam
     pysam.index(bam)
@@ -34,6 +34,12 @@ def downsample_by_cov(bam, out, target_num_reads, seed, threads):
     # calculate coverage of each cb
     cb_cov = get_cb_coverage(inp)
 
+    # filter cb based on min_reads
+    if min_reads:
+        keep_cbs = {cb for cb, r in cb_cov.items() if r >= min_reads}
+    else:
+        keep_cbs = set(cb_cov.keys())
+    
     # make dicts
     ub_set = {}
     rd_set = {}
@@ -45,9 +51,13 @@ def downsample_by_cov(bam, out, target_num_reads, seed, threads):
     for read in inp.fetch():
         # use primary reads
         if not read.is_supplementary and not read.is_secondary:
+            cb = read.get_tag('CB')
+            # skip low-coverage cb
+            if cb not in keep_cbs:
+                continue
+            
             rand_value = np.random.rand()
             # get tags
-            cb = read.get_tag('CB')
             ub = read.get_tag('UB')
             gn = read.get_tag('GN')
             # downsample based on coverage
@@ -124,8 +134,12 @@ def main():
         help='number of reads to downsample per cell barcode'
     )
     parser.add_argument(
+        '--min_reads', type=int, default = 0,
+        help='minimum primary reads per cell barcode'
+    )
+    parser.add_argument(
         '--seed', type=int, default = 0,
-        help='number of threads to use'
+        help='seed'
     )
     parser.add_argument(
         '--n', type=int, default = 4,
@@ -138,6 +152,7 @@ def main():
         bam = args.bam,
         out = args.out,
         target_num_reads = args.target_num_reads,
+        min_reads = args.min_reads,
         seed = args.seed,
         threads = args.n
     )
