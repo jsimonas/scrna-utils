@@ -78,9 +78,9 @@ def downsample_by_cov(bam, out, target_num_reads, min_reads, seed, threads):
     # flatted data
     genes = set(g for genes in ub_set.values() for u, g in genes)
     ub_df = pd.DataFrame(
-    data = 0,
-    index = np.array(list(ub_set.keys())),
-    columns = list(genes)
+        data = 0,
+        index = np.array(list(ub_set.keys())),
+        columns = list(genes)
     )
     
     rd_df = pd.DataFrame.from_dict(
